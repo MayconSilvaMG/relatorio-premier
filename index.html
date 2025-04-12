@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório do Dia</title>
+  <link rel="icon" type="image/png" href="assets/image.png" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: black;
+      min-height: 100vh;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .top-logo {
+      width: 100%;
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+    .top-logo img {
+      width: 160px;
+      max-width: 80vw;
+    }
+    .motivacional {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 16px;
+      padding: 0 20px;
+    }
+    .wrapper {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 12px;
+      width: 95%;
+      max-width: 420px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+    }
+    .item span {
+      text-transform: uppercase;
+      font-size: 14px;
+      flex: 1;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .controls button {
+      background: #ffb300;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+    }
+    .controls span {
+      min-width: 24px;
+      text-align: center;
+    }
+    button {
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .main-btn {
+      margin-top: 30px;
+      width: 100%;
+      background: #ffb300;
+      color: #000;
+      border: none;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .selector {
+      margin: 30px 0 10px;
+      text-align: left;
+    }
+    .selector label {
+      margin-right: 10px;
+      font-size: 14px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    @media (max-width: 480px) {
+      .controls button {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+      .main-btn {
+        font-size: 16px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-logo">
+    <img src="/assets/premier-Photoroom.png" alt="Logo Premier" />
+  </div>
+  <div class="motivacional" id="motivacional" style="background-color: #000000; color: #ffb300; font-weight: bold;"></div>
+  <div class="wrapper">
+    <h1>Relatório do Dia</h1>
+    <div id="itens"></div>
+
+    <div class="selector">
+      <label><input type="radio" name="local" value="centro" onchange="atualizarNomes()"> CENTRO</label>
+      <label><input type="radio" name="local" value="rotatoria" onchange="atualizarNomes()"> ROTATÓRIA</label>
+      <select id="colaborador" style="display: none;"></select>
+    </div>
+
+    <button class="main-btn" onclick="gerarRelatorio()">Enviar para WhatsApp</button>
+  </div>
+
+  <script>
+    const mensagens = [
+      "Você nasceu para vencer!",
+      "Cada corte é uma obra de arte!",
+      "Hoje é dia de fazer história!",
+      "Dê o seu melhor, o resto vem!",
+      "Confiança é a chave do sucesso!",
+      "O sucesso começa com uma boa atitude!",
+      "Barbeiro bom nunca para de evoluir!",
+      "A excelência está nos detalhes!",
+      "Mais que cortes, criamos autoestima!",
+      "Desistir não é opção!",
+      "Seu sucesso é cortado diariamente!",
+      "Barbear é arte, você é artista!",
+      "O esforço de hoje é o resultado de amanhã!",
+      "Um barbeiro motivado inspira confiança!",
+      "Transforme cabelo em autoestima!",
+      "Cada cliente é uma oportunidade de brilhar!",
+      "Dedicação faz a diferença!",
+      "Acorde com propósito e barbeie com paixão!",
+      "Faça com amor, faça com excelência!",
+      "Todo grande barbeiro começou do zero!",
+      "Você é o diferencial do seu salão!",
+      "Quem trabalha com alegria atrai sucesso!",
+      "Seja a melhor versão de você no salão!",
+      "Trabalhe duro em silêncio e mostre no resultado!",
+      "O foco é cortar bem e crescer sempre!",
+      "Atitude profissional, mente de campeão!",
+      "Um corte pode mudar o dia de alguém!",
+      "Você faz mais do que cabelo, você motiva!",
+      "Persistência e tesoura na mão!",
+      "Confie no seu talento, a cadeira está cheia!",
+      "Estilo na mão e humildade no coração!",
+      "Acredite em você, você é o destaque!",
+      "Todo cliente é um show à parte!",
+      "Você é inspiração dentro da barbearia!",
+      "Coragem pra começar, talento pra continuar!",
+      "Foco, fé e navalha na mão!",
+      "Barbeiro é mais que profissão, é missão!",
+      "Torne-se indispensável pelo que entrega!",
+      "A cada corte, mais confiança!",
+      "Quem é raiz não desiste!",
+      "Deus ajuda quem levanta cedo e corta bem!",
+      "Não é só trabalho, é propósito!",
+      "Atendimento é arte, faça com o coração!",
+      "Você é o dono do seu sucesso!",
+      "Uma semana de disciplina vale por meses de resultado!",
+      "A meta é fazer o cliente sorrir!",
+      "Não espere por sorte, vá lá e corte!",
+      "Você faz parte da mudança!",
+      "Hoje você supera o barbeiro de ontem!",
+      "Nada resiste ao trabalho duro!",
+      "Transforme o salão num palco de resultados!",
+      "Sua energia contagia o ambiente!",
+      "Barbearia é lifestyle, viva isso!",
+      "Você inspira mais do que imagina!",
+      "A cadeira é seu trono, comande com maestria!",
+      "Quem quer, corta! Quem corta, cresce!",
+      "Comece o dia com atitude de campeão!",
+      "Todo cliente merece seu melhor!",
+      "A vida recompensa o esforço!",
+      "Seu diferencial é a entrega com paixão!",
+      "Não tema desafios, vença com estilo!",
+      "Trabalhe com propósito e a motivação vem!",
+      "Faça com excelência, o mundo vê!",
+      "Você transforma o ordinário em extraordinário!",
+      "O sucesso está na rotina bem feita!",
+      "A disciplina constrói grandes barbeiros!",
+      "Pequenos cortes, grandes conquistas!",
+      "Corte com confiança, sirva com humildade!",
+      "Você é o motor do seu sonho!",
+      "A sua história é cortada com esforço!",
+      "Respeite sua jornada, valorize sua evolução!",
+      "Um bom corte vale mais que mil palavras!",
+      "Brilhe com seu talento!",
+      "A motivação te levanta, o hábito te sustenta!",
+      "Cada cliente é uma chance de melhorar!",
+      "Você é uma marca registrada!",
+      "Não é sorte, é dedicação!",
+      "Corte firme, mente focada!",
+      "A sua persistência define seu resultado!",
+      "Você é inspiração no espelho!",
+      "Todo dia é chance de fazer história!",
+      "Lute pelo seu sonho, corte pelo seu futuro!",
+      "A lâmina afiada reflete sua mente afiada!",
+      "Faça valer a pena cada atendimento!",
+      "Traga seu brilho para cada corte!",
+      "Você é referência onde passa!",
+      "A atitude muda tudo!",
+      "Tenha orgulho do que você faz!",
+      "Um corte de respeito começa na postura!",
+      "Você é talento em ação!",
+      "Servir com excelência é arte!",
+      "Comece o dia motivado, termine realizado!",
+      "Tenha fé no seu talento e siga em frente!",
+      "O melhor corte é o feito com alma!",
+      "Cliente feliz é sua maior propaganda!",
+      "Trabalhe duro até que digam: quero cortar com você!",
+      "Disciplina, dedicação, dom — a fórmula do barbeiro top!"
+    ];
+
+    document.getElementById('motivacional').textContent = mensagens[Math.floor(Math.random() * mensagens.length)];
+
+    const campos = [
+      "- CLIENTE", "- PRODUTO", "- SOBRANCELHA", "- DEPILAÇÃO", "- HIDRATAÇÃO", "- SELAGEM",
+      "- ASSINATURA", "- CONTATOS", "- ÍMÃ DE CLIENTES"
+    ];
+
+    const valores = {};
+    const container = document.getElementById('itens');
+
+    campos.forEach(campo => {
+      valores[campo] = 0;
+      const id = campo.toLowerCase().replace(/[^a-z0-9]/gi, '-');
+
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <span>${campo}</span>
+        <div class="controls">
+          <button onclick="alterar('${campo}', -1)">-</button>
+          <span id="val-${id}">0</span>
+          <button onclick="alterar('${campo}', 1)">+</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    function alterar(campo, delta) {
+      valores[campo] = Math.max(0, (valores[campo] || 0) + delta);
+      const id = campo.toLowerCase().replace(/[^a-z0-9]/gi, '-');
+      document.getElementById(`val-${id}`).textContent = valores[campo];
+    }
+
+    function atualizarNomes() {
+      const local = document.querySelector('input[name="local"]:checked');
+      const select = document.getElementById('colaborador');
+      if (!local) return;
+      select.style.display = 'block';
+
+      const nomesCentro = ["ALLAN", "LUIS FERNANDO", "PABLO", "WILLIAM"];
+      const nomesRotatoria = ["HATILLAS", "JOÃO VITOR", "KEVIN", "KLEVERSON", "RAFAEL", "THALLES"];
+
+      const nomes = local.value === "centro" ? nomesCentro : nomesRotatoria;
+      select.innerHTML = nomes.map(n => `<option value="${n}">${n}</option>`).join('');
+    }
+
+    function gerarRelatorio() {
+      const parte1 = campos.slice(0, 6).map(c => `•${c}: ${valores[c]}`).join('\n');
+      const parte2 = campos.slice(6).map(c => `•${c}: ${valores[c]}`).join('\n');
+      const local = document.querySelector('input[name="local"]:checked')?.value?.toUpperCase();
+      const colaborador = document.getElementById('colaborador').value;
+      const texto = `COLABORADOR: ${colaborador || 'NÃO SELECIONADO'}\nLOCAL: ${local || 'NÃO SELECIONADO'}\n\nRELATÓRIO DO DIA\n${parte1}\n———————————\n${parte2}`;
+      const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
